@@ -1,0 +1,23 @@
+{
+	"name": "tachikoma",
+	"version": "1.0.0",
+	"description": "Tachikoma Discord Bot",
+	"homepage": "https://github.com/ChrisScott9456/tachikoma#readme",
+	"bugs": {
+		"url": "https://github.com/ChrisScott9456/tachikoma/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ChrisScott9456/tachikoma.git"
+	},
+	"license": "MIT",
+	"author": "ChrisScott9456",
+	"main": "build/index.js",
+	"scripts": {
+		"start": "tsc && node build/index.js",
+		"build": "tsc"
+	},
+	"dependencies": {
+		"typescript": "^5.8.3"
+	}
+}
