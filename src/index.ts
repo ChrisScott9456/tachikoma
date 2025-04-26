@@ -1,18 +1,18 @@
 import 'dotenv/config';
 import { Events, GatewayIntentBits, REST, Routes } from 'discord.js';
 import { Commands } from './commands';
-import { MyClient } from './classes/MyClient';
+import { Tachikoma } from './classes/Tachikoma';
 import { EmbedErrorMessages, errorEmbed } from './utils/errorEmbed';
 import { replyWrapper } from './utils/replyWrapper';
 import { createPollJob, endPollJob } from './utils/poll';
 import { APPLICATION_ID, DISCORD_TOKEN } from './lib/envVariables';
 import { createTables } from './lib/knex';
-import { DisTubeCommand, PaginationCommands, PaginationCustomId } from './interfaces/Command';
+import { PlayerCommand, PaginationCommands, PaginationCustomId } from './interfaces/Command';
 import { deserialize } from './utils/deserialize';
 // import { QueueCommand } from './commands/youtube/queue';
 
 // Create a new client instance
-export const client = new MyClient({
+export const client = new Tachikoma({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -62,7 +62,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!(interaction.isChatInputCommand() || interaction.isButton())) return;
 
 	// If the interaction is a button command, only execute if it is a DistubeCommand
-	if (interaction.isButton() && !Object.values(DisTubeCommand).includes(interaction.customId as DisTubeCommand)) return;
+	if (interaction.isButton() && !Object.values(PlayerCommand).includes(interaction.customId as PlayerCommand)) return;
 
 	try {
 		const command = interaction.isChatInputCommand() ? Commands.get(interaction.commandName) : interaction.isButton() ? Commands.get(interaction.customId) : null;

@@ -19,7 +19,7 @@ export abstract class Command {
 	public aliases: string[];
 }
 
-export enum DisTubeCommand {
+export enum PlayerCommand {
 	LOOP = 'loop',
 	PAUSE = 'pause',
 	PLAY = 'play',

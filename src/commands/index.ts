@@ -6,7 +6,7 @@ import { MovieListCommand } from './movienight/movielist';
 import { PingCommand } from './text/ping';
 // import { LoopCommand } from './youtube/loop';
 // import { PauseCommand } from './youtube/pause';
-// import { PlayCommand } from './youtube/play';
+import { PlayCommand } from './youtube/play';
 // import { PreviousCommand } from './youtube/previous';
 // import { QueueCommand } from './youtube/queue';
 // import { SeekCommand } from './youtube/seek';
@@ -25,7 +25,7 @@ export const Commands = new Map<string, Command>();
 	// LoopCommand,
 	// PauseCommand,
 	PingCommand,
-	// PlayCommand,
+	PlayCommand,
 	// PreviousCommand,
 	// QueueCommand,
 	// SeekCommand,
