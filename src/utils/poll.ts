@@ -1,5 +1,5 @@
 import { EmbedBuilder, GuildScheduledEventCreateOptions, GuildScheduledEventEntityType, GuildScheduledEventPrivacyLevel, PollLayoutType, TextChannel } from 'discord.js';
-import { client } from '..';
+import { tachikoma } from '..';
 import moment from 'moment';
 import { CronJob } from 'cron';
 
@@ -19,7 +19,7 @@ const timestampFormatted = (format = 'LLLL') => {
 	return `${timestamp().format(format)} EST`;
 };
 
-export const getChannel = async () => (await client.channels.fetch(MOVIE_NIGHT_TEXT_CHANNEL)) as TextChannel;
+export const getChannel = async () => (await tachikoma.channels.fetch(MOVIE_NIGHT_TEXT_CHANNEL)) as TextChannel;
 
 const now = new Date(); //! Testing
 

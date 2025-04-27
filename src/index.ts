@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Events, GatewayIntentBits, REST, Routes } from 'discord.js';
+import { EmbedBuilder, Events, GatewayIntentBits, REST, Routes } from 'discord.js';
 import { Commands } from './commands';
 import { Tachikoma } from './classes/Tachikoma';
 import { EmbedErrorMessages, errorEmbed } from './utils/errorEmbed';
@@ -9,10 +9,12 @@ import { APPLICATION_ID, DISCORD_TOKEN } from './lib/envVariables';
 import { createTables } from './lib/knex';
 import { PlayerCommand, PaginationCommands, PaginationCustomId } from './interfaces/Command';
 import { deserialize } from './utils/deserialize';
-// import { QueueCommand } from './commands/youtube/queue';
+import { QueueCordEvents } from 'queuecord';
+import { embedWrapper } from './utils/embedWrapper';
+import { QueueCommand } from './commands/youtube/queue';
 
 // Create a new client instance
-export const client = new Tachikoma({
+export const tachikoma = new Tachikoma({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -29,8 +31,8 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 /*
  * Client Ready
  */
-client.once(Events.ClientReady, async (readyClient) => {
-	if (!client.user || !client.application) {
+tachikoma.once(Events.ClientReady, async (readyClient) => {
+	if (!tachikoma.user || !tachikoma.application) {
 		return;
 	}
 
@@ -57,7 +59,7 @@ client.once(Events.ClientReady, async (readyClient) => {
 /*
  * Listens to chat commands and buttons to execute run() command
  */
-client.on(Events.InteractionCreate, async (interaction) => {
+tachikoma.on(Events.InteractionCreate, async (interaction) => {
 	// Check if interaction is a chat command or a button command
 	if (!(interaction.isChatInputCommand() || interaction.isButton())) return;
 
@@ -78,7 +80,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 /*
  * Listens to when queue pagination buttons are pressed
  */
-client.on(Events.InteractionCreate, async (interaction) => {
+tachikoma.on(Events.InteractionCreate, async (interaction) => {
 	// Only execute if Button interaction and is one of PaginationCommands
 	if (interaction.isButton()) {
 		const customId = deserialize<PaginationCustomId>(interaction.customId);
@@ -89,14 +91,34 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			if (customId.id === PaginationCommands.PREVIOUS_PAGE) page--;
 			if (customId.id === PaginationCommands.NEXT_PAGE) page++;
 
-			// await (Commands.get(DisTubeCommand.QUEUE) as QueueCommand).run({ interaction }, page);
+			await (Commands.get(PlayerCommand.QUEUE) as QueueCommand).run({ interaction }, page);
 		}
 	}
 });
 
 /*
+ * QueueCord Event Listeners
+ */
+tachikoma.queueCord
+	.on(QueueCordEvents.Playing, async (song) => {
+		await Commands.get(PlayerCommand.QUEUE).run({ channel: song.interaction.channel });
+
+		tachikoma.user.setPresence({ status: 'online', activities: [{ name: song.title, type: 0, state: song.webpage_url }] });
+	})
+	.on(QueueCordEvents.SongAdded, async (song) => {
+		song.interaction.channel.send(embedWrapper(song, 'Queued Song'));
+	})
+	.on(QueueCordEvents.PlaylistAdded, async (playlist) => {
+		const song = playlist[0];
+		song.interaction.channel.send(embedWrapper({ ...song, interaction: song.interaction, title: song.playlist_title, webpage_url: song.playlist_webpage_url }, 'Queued Playlist'));
+	})
+	.on(QueueCordEvents.Error, async (error) => {
+		console.error(error);
+	});
+
+/*
  * Listens to and logs any errors that occur
  */
-client.on(Events.Error, (error) => {
+tachikoma.on(Events.Error, (error) => {
 	console.error(error);
 });

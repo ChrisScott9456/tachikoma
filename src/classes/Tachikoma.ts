@@ -4,7 +4,7 @@ import { setDefaultPresence } from '../utils/defaultPresence';
 import { QueueCord } from 'queuecord';
 
 export class Tachikoma extends Client {
-	static queueCord: QueueCord;
+	public queueCord: QueueCord = new QueueCord();
 
 	constructor(options: ClientOptions) {
 		super(options);
@@ -14,7 +14,6 @@ export class Tachikoma extends Client {
 
 	async initialize() {
 		await this.login(DISCORD_TOKEN);
-		Tachikoma.queueCord = new QueueCord();
 
 		setDefaultPresence();
 	}
