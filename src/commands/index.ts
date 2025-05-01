@@ -4,10 +4,10 @@ import { DeleteMovieCommand } from './movienight/deletemovie';
 import { ForceMovieNightCommand } from './movienight/forcemovienight';
 import { MovieListCommand } from './movienight/movielist';
 import { PingCommand } from './text/ping';
-// import { LoopCommand } from './youtube/loop';
+import { LoopCommand } from './youtube/loop';
 import { PauseCommand } from './youtube/pause';
 import { PlayCommand } from './youtube/play';
-// import { PreviousCommand } from './youtube/previous';
+import { PreviousCommand } from './youtube/previous';
 import { QueueCommand } from './youtube/queue';
 // import { SeekCommand } from './youtube/seek';
 import { ShuffleCommand } from './youtube/shuffle';
@@ -22,11 +22,11 @@ export const Commands = new Map<string, Command>();
 	DeleteMovieCommand,
 	ForceMovieNightCommand,
 	MovieListCommand,
-	// LoopCommand,
+	LoopCommand,
 	PauseCommand,
 	PingCommand,
 	PlayCommand,
-	// PreviousCommand,
+	PreviousCommand,
 	QueueCommand,
 	// SeekCommand,
 	ShuffleCommand,

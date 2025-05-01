@@ -23,7 +23,7 @@ export function errorEmbed(errorMessage: EmbedErrorMessages, ephemeral: boolean 
 	if (errorMessage === EmbedErrorMessages.GENERAL_ERROR) ephemeral = false;
 
 	return {
-		ephemeral, // If true, only display to the user
+		flags: ephemeral ? 'Ephemeral' : null, // If true, only display to the user
 		embeds: [new EmbedBuilder().setColor(0xff0000).setDescription(`**${errorMessage}**`)],
 	};
 }

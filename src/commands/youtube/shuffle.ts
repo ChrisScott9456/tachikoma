@@ -7,7 +7,7 @@ import { EmbedError, EmbedErrorMessages } from '../../utils/errorEmbed';
 export class ShuffleCommand extends Command {
 	readonly slashCommandBuilder = new SlashCommandBuilder().setName(PlayerCommand.SHUFFLE).setDescription('Shuffles the current queue of songs.');
 
-	async run({ interaction, channel }: RunParams) {
+	async run({ interaction }: RunParams) {
 		const queue = tachikoma.queueCord.getQueue();
 		if (queue.length < 1) throw new EmbedError(EmbedErrorMessages.EMPTY_QUEUE);
 
@@ -17,7 +17,6 @@ export class ShuffleCommand extends Command {
 				embeds: [new EmbedBuilder().setColor('Blurple').setTitle('Shuffled')],
 			},
 			interaction,
-			channel,
 		});
 	}
 }

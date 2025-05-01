@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { Command, PlayerCommand, RunParamsChat } from '../../interfaces/Command';
 import { EmbedError, EmbedErrorMessages } from '../../utils/errorEmbed';
-import { isYouTubePlaylist } from '../../utils/isYouTubePlaylist';
 import { tachikoma } from '../..';
 
 export class PlayCommand extends Command {
@@ -18,7 +17,7 @@ export class PlayCommand extends Command {
 
 		if (!vc) throw new EmbedError(EmbedErrorMessages.VOICE_CHANNEL_REQUIRED);
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply();
 		await tachikoma.queueCord.addToQueue(input, interaction, shuffle);
 	}
 }

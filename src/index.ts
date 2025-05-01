@@ -101,16 +101,19 @@ tachikoma.on(Events.InteractionCreate, async (interaction) => {
  */
 tachikoma.queueCord
 	.on(QueueCordEvents.Playing, async (song) => {
-		await Commands.get(PlayerCommand.QUEUE).run({ channel: song.interaction.channel });
+		await Commands.get(PlayerCommand.QUEUE).run({ interaction: song.interaction });
 
 		tachikoma.user.setPresence({ status: 'online', activities: [{ name: song.title, type: 0, state: song.webpage_url }] });
 	})
 	.on(QueueCordEvents.SongAdded, async (song) => {
-		song.interaction.channel.send(embedWrapper(song, 'Queued Song'));
+		replyWrapper({ message: embedWrapper(song, 'Queued Song'), interaction: song.interaction });
 	})
 	.on(QueueCordEvents.PlaylistAdded, async (playlist) => {
 		const song = playlist[0];
-		song.interaction.channel.send(embedWrapper({ ...song, interaction: song.interaction, title: song.playlist_title, webpage_url: song.playlist_webpage_url }, 'Queued Playlist'));
+		replyWrapper({
+			message: embedWrapper({ ...song, interaction: song.interaction, title: song.playlist_title, webpage_url: song.playlist_webpage_url }, 'Queued Playlist'),
+			interaction: song.interaction,
+		});
 	})
 	.on(QueueCordEvents.Error, async (error) => {
 		console.error(error);

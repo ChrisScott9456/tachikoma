@@ -4,7 +4,6 @@ import { tachikoma } from '../..';
 import { replyWrapper } from '../../utils/replyWrapper';
 import { EmbedError, EmbedErrorMessages } from '../../utils/errorEmbed';
 import { embedWrapper } from '../../utils/embedWrapper';
-import { QueueCordEvents } from 'queuecord';
 
 export class SkipCommand extends Command {
 	public aliases: string[] = ['next'];
@@ -13,7 +12,7 @@ export class SkipCommand extends Command {
 		.setDescription('Skips to the next song.')
 		.addNumberOption((opt) => opt.setName('position').setDescription('The specific position of a song in the queue you want to skip to').setRequired(false));
 
-	async run({ interaction, channel }: RunParams) {
+	async run({ interaction }: RunParams) {
 		const queue = tachikoma.queueCord.getQueue();
 		if (queue.length < 1) throw new EmbedError(EmbedErrorMessages.EMPTY_QUEUE);
 
@@ -25,7 +24,7 @@ export class SkipCommand extends Command {
 			position = interaction.options.getNumber('position') || 0;
 		}
 
-		await tachikoma.queueCord.skip(position);
-		await replyWrapper({ message: embedWrapper(song, QueueCordEvents.Skipped), interaction: interaction, channel: channel });
+		const title = await tachikoma.queueCord.skip(position);
+		await replyWrapper({ message: embedWrapper(song, title), interaction });
 	}
 }
